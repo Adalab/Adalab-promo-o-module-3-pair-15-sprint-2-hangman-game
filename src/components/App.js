@@ -31,35 +31,39 @@ function App() {
     setNumberOfErrors(numberOfErrors + 1);
   };
   const handleInputChange = (ev) => {
+    ev.preventDefault();
     const inputValue = ev.currentTarget.value;
-    const regex = new RegExp("^[a-zA-Z\u00C0-\u00FF]?$");
-    if (regex.test(inputValue)) {
+    const regex = new RegExp("^[a-zA-Z\u00C0-\u00FF]?$");    
+    if (inputValue.test(regex)) {
       setLastLetter(inputValue);
-      if (inputValue !== "") {
-        setUserLetters([...userLetters, inputValue]);
+      if (word.includes(inputValue)) {
+          setUserLetters([...userLetters, inputValue]);
+      }else {
+        setIncorrectLetters([...incorrectLetters, inputValue]);
+        handleButtonClick(ev);
       }
+      } else {
+      setLastLetter("");
     }
+     
   };
 
   const renderSolutionLetters = () => {
     const wordLetters = word.split("");
     // Pintar el guión de cada letra
     return wordLetters.map((eachLetter, index) => {
-      if (eachLetter === lastLetter) {
-        correctLetters.push(lastLetter);
-        console.log(correctLetters);
+      if (userLetters.includes(eachLetter)) {
         return (
           <li className="letter" key={index}>
-            {lastLetter}
+            {userLetters}
           </li>
         );
       } else {
-        incorrectLetters.push(lastLetter);
         return <li className="letter" key={index}></li>;
       }
     });
   };
-  const renderErrorLetters = () => {};
+  //const renderErrorLetters = () => {};
 
   return (
     <div>
