@@ -27,9 +27,7 @@ function App() {
   const [userLetters, setUserLetters] = useState([]);
   const [incorrectLetters, setIncorrectLetters] = useState([]);
 
-  const handleButtonClick = () => {
-    setNumberOfErrors(numberOfErrors + 1);
-  };
+
 
   //Recoger el input del usuario
   const handleInputChange = (ev) => {
@@ -50,6 +48,9 @@ function App() {
       } else {
         //Si no es una letra correcta, se guarda en el array de letras incorrectas (incorrectLetters)
         setIncorrectLetters([...incorrectLetters, inputValue]);
+        if (incorrectLetters.length <= 12) {
+          setNumberOfErrors(numberOfErrors+1);
+        }
       }
     } else {
       //Después, se limpia lastLetter
@@ -63,7 +64,7 @@ function App() {
     const wordLetters = word.split("");
     // Pintar el guión de cada letra
     return wordLetters.map((eachLetter, index) => {
-      //Si la letra es correcta, 
+      //Si la letra es correcta,
       if (userLetters.includes(eachLetter)) {
         return (
           //pinta la letra en solución
@@ -82,19 +83,22 @@ function App() {
     //El map recorre el array de letras incorrectas
     return incorrectLetters.map((eachLetter, index) => {
       //Si la letra incorrecta está incluida,
-        if (incorrectLetters.includes(eachLetter)) {
-          return (
-            //pinta la letra y la rayita
-            <li className="letter" key={index}>
-              {eachLetter}
-            </li>
-          );
-        } else {
-          //si no, no pinta nada
-          return <li className="letter" key={index}></li>;
-        }
-      });
+      if (incorrectLetters.includes(eachLetter)) {
+        return (
+          //pinta la letra y la rayita
+          <li className="letter" key={index}>
+            {eachLetter}
+          </li>
+        );
+      } else {
+        //si no, no pinta nada
+        return <li className="letter" key={index}></li>;
+      }
+    });
   };
+
+
+ 
 
   return (
     <div>
@@ -106,15 +110,11 @@ function App() {
           <section>
             <div className="solution">
               <h2 className="title">Solución:</h2>
-              <ul className="letters">
-                {renderSolutionLetters()}
-              </ul>
+              <ul className="letters">{renderSolutionLetters()}</ul>
             </div>
             <div className="error">
               <h2 className="title">Letras falladas:</h2>
-              <ul className="letters">
-                {renderErrorLetters()}
-              </ul>
+              <ul className="letters">{renderErrorLetters()}</ul>
             </div>
             <form className="form">
               <label className="title" htmlFor="last-letter">
