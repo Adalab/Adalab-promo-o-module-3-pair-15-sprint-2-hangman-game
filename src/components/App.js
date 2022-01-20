@@ -33,19 +33,17 @@ function App() {
   const handleInputChange = (ev) => {
     ev.preventDefault();
     const inputValue = ev.currentTarget.value;
-    const regex = new RegExp("^[a-zA-Z\u00C0-\u00FF]?$");    
-    if (inputValue.test(regex)) {
+    const regex = new RegExp("^[a-zA-Z\u00C0-\u00FF]?$");
+    if (regex.test(inputValue) && inputValue !== "") {
       setLastLetter(inputValue);
       if (word.includes(inputValue)) {
-          setUserLetters([...userLetters, inputValue]);
-      }else {
-        setIncorrectLetters([...incorrectLetters, inputValue]);
-        handleButtonClick(ev);
-      }
+        setUserLetters([...userLetters, inputValue]);
       } else {
+        setIncorrectLetters([...incorrectLetters, inputValue]);
+      }
+    } else {
       setLastLetter("");
     }
-     
   };
 
   const renderSolutionLetters = () => {
@@ -55,7 +53,7 @@ function App() {
       if (userLetters.includes(eachLetter)) {
         return (
           <li className="letter" key={index}>
-            {userLetters}
+            {eachLetter}
           </li>
         );
       } else {
