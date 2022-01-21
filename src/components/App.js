@@ -27,8 +27,6 @@ function App() {
   const [userLetters, setUserLetters] = useState([]);
   const [incorrectLetters, setIncorrectLetters] = useState([]);
 
-
-
   //Recoger el input del usuario
   const handleInputChange = (ev) => {
     //Evita el envío del formulario
@@ -47,10 +45,10 @@ function App() {
         setUserLetters([...userLetters, inputValue]);
       } else {
         //Si no es una letra correcta, se guarda en el array de letras incorrectas (incorrectLetters)
-        setIncorrectLetters([...incorrectLetters, inputValue]);
-        if (incorrectLetters.length <= 12) {
-          setNumberOfErrors(numberOfErrors+1);
+        if(!incorrectLetters.includes(inputValue)) {
+          setIncorrectLetters([...incorrectLetters, inputValue]);
         }
+        
       }
     } else {
       //Después, se limpia lastLetter
@@ -97,8 +95,9 @@ function App() {
     });
   };
 
-
- 
+  const renderMoñeco = () => {
+    return incorrectLetters.length
+  };
 
   return (
     <div>
@@ -132,7 +131,8 @@ function App() {
               />
             </form>
           </section>
-          <section className={`dummy error-${numberOfErrors}`}>
+          <h1>{renderMoñeco() >= 13 ? 'Has perdido' : ''}</h1>
+          <section className={`dummy error-${renderMoñeco()}`}>
             <span className="error-13 eye"></span>
             <span className="error-12 eye"></span>
             <span className="error-11 line"></span>
