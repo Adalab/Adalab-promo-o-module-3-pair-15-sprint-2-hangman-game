@@ -22,7 +22,6 @@ import { useState } from "react";
 
 function App() {
   const [word, setWord] = useState("pepino");
-  const [numberOfErrors, setNumberOfErrors] = useState(0);
   const [lastLetter, setLastLetter] = useState("");
   const [userLetters, setUserLetters] = useState([]);
   const [incorrectLetters, setIncorrectLetters] = useState([]);
@@ -44,11 +43,10 @@ function App() {
         //se guarda en el array de letras correctas (userLetters)
         setUserLetters([...userLetters, inputValue]);
       } else {
-        //Si no es una letra correcta, se guarda en el array de letras incorrectas (incorrectLetters)
+        //Si no es una letra correcta y no está repetida, se guarda en el array de letras incorrectas (incorrectLetters)
         if(!incorrectLetters.includes(inputValue)) {
           setIncorrectLetters([...incorrectLetters, inputValue]);
-        }
-        
+        }        
       }
     } else {
       //Después, se limpia lastLetter
@@ -94,7 +92,7 @@ function App() {
       }
     });
   };
-
+//Devuleve length del array de letras incorrectas y ese número es el que aumenta el moñeco
   const renderMoñeco = () => {
     return incorrectLetters.length
   };
@@ -131,7 +129,9 @@ function App() {
               />
             </form>
           </section>
+          {/*si el número (length) del array es igual o mayor a 13, devuelve mensaje o nada*/}
           <h1>{renderMoñeco() >= 13 ? 'Has perdido' : ''}</h1>
+          {/*renderMoñeco pinta el número (length) del array de incorrectLetters*/}
           <section className={`dummy error-${renderMoñeco()}`}>
             <span className="error-13 eye"></span>
             <span className="error-12 eye"></span>
