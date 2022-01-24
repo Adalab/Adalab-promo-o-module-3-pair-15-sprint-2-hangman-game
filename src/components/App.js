@@ -2,12 +2,19 @@ import "../styles/App.scss";
 import { useState, useEffect } from "react";
 import callToApi from '../services/fetch';
 import Header from './Header';
+import Muñeco from './Muñeco';
+import SolutionLetters from "./SolutionLetters";
+import ErrorLetters from "./ErrorLetters";
 
 function App() {
   const [word, setWord] = useState('');
   const [lastLetter, setLastLetter] = useState("");
   const [userLetters, setUserLetters] = useState([]);
   const [incorrectLetters, setIncorrectLetters] = useState([]);
+  
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+  }
 
   useEffect(() => {
     callToApi().then((response) => {
@@ -92,15 +99,9 @@ function App() {
         <Header/>
         <main className="main">
           <section>
-            <div className="solution">
-              <h2 className="title">Solución:</h2>
-              <ul className="letters">{renderSolutionLetters()}</ul>
-            </div>
-            <div className="error">
-              <h2 className="title">Letras falladas:</h2>
-              <ul className="letters">{renderErrorLetters()}</ul>
-            </div>
-            <form className="form">
+           <SolutionLetters letters={renderSolutionLetters()} />
+            <ErrorLetters letters={renderErrorLetters()}/>
+            <form className="form" onSubmit={handleSubmit}>
               <label className="title" htmlFor="last-letter">
                 Escribe una letra:
               </label>
@@ -118,23 +119,7 @@ function App() {
           </section>
           {/*si el número (length) del array es igual o mayor a 13, devuelve mensaje o nada*/}
           <h1>{renderMoñeco() >= 13 ? 'Has perdido' : ''}</h1>
-          {/*renderMoñeco pinta el número (length) del array de incorrectLetters*/}
-          <section className={`dummy error-${renderMoñeco()}`}>
-            <span className="error-13 eye"></span>
-            <span className="error-12 eye"></span>
-            <span className="error-11 line"></span>
-            <span className="error-10 line"></span>
-            <span className="error-9 line"></span>
-            <span className="error-8 line"></span>
-            <span className="error-7 line"></span>
-            <span className="error-6 head"></span>
-            <span className="error-5 line"></span>
-            <span className="error-4 line"></span>
-            <span className="error-3 line"></span>
-            <span className="error-2 line"></span>
-            <span className="error-1 line"></span>
-            {/*<button onClick={handleButtonClick}>Incrementar</button>*/}
-          </section>
+          <Muñeco numberOfErrors={renderMoñeco()}/>
         </main>
       </div>
     </div>
