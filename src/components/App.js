@@ -5,6 +5,10 @@ import Header from './Header';
 import Muñeco from './Muñeco';
 import SolutionLetters from "./SolutionLetters";
 import ErrorLetters from "./ErrorLetters";
+import { Route, Switch } from "react-router-dom";
+import Footer from "./Footer";
+import Instructions from "./Instructions";
+import Options from "./Options";
 
 function App() {
   const [word, setWord] = useState('');
@@ -98,6 +102,14 @@ function App() {
       <div className="page">
         <Header/>
         <main className="main">
+          <Switch>
+          <Route path="/instructions">
+          <Instructions/>
+          </Route>
+          <Route path="/options">
+          <Options/>
+          </Route>
+          <Route exact path="/">
           <section>
            <SolutionLetters letters={renderSolutionLetters()} />
             <ErrorLetters letters={renderErrorLetters()}/>
@@ -119,8 +131,11 @@ function App() {
           </section>
           {/*si el número (length) del array es igual o mayor a 13, devuelve mensaje o nada*/}
           <h1>{renderMoñeco() >= 13 ? 'Has perdido' : ''}</h1>
+          </Route>
+          </Switch>
           <Muñeco numberOfErrors={renderMoñeco()}/>
         </main>
+        <Footer/>
       </div>
     </div>
   );
