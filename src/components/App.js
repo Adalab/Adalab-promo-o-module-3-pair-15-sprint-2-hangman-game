@@ -1,28 +1,34 @@
 import "../styles/App.scss";
 import { useState, useEffect } from "react";
-import callToApi from '../services/fetch';
-import Header from './Header';
-import Muñeco from './Muñeco';
+import callToApi from "../services/fetch";
+import Header from "./Header";
+import Muñeco from "./Muñeco";
 import SolutionLetters from "./SolutionLetters";
 import ErrorLetters from "./ErrorLetters";
 import { Route, Switch } from "react-router-dom";
 import Footer from "./Footer";
 import Instructions from "./Instructions";
 import Options from "./Options";
+import Form from "./Form";
+import Loading from "./Loading";
 
 function App() {
-  const [word, setWord] = useState('');
+  const [word, setWord] = useState("");
   const [lastLetter, setLastLetter] = useState("");
   const [userLetters, setUserLetters] = useState([]);
   const [incorrectLetters, setIncorrectLetters] = useState([]);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = (ev) => {
     ev.preventDefault();
-  }
+  };
 
   useEffect(() => {
+    setIsLoading(true);
     callToApi().then((response) => {
+      console.log(response);
       setWord(response);
+      setIsLoading(false);
     });
   }, []);
 
@@ -44,9 +50,9 @@ function App() {
         setUserLetters([...userLetters, inputValue]);
       } else {
         //Si no es una letra correcta y no está repetida, se guarda en el array de letras incorrectas (incorrectLetters)
-        if(!incorrectLetters.includes(inputValue)) {
+        if (!incorrectLetters.includes(inputValue)) {
           setIncorrectLetters([...incorrectLetters, inputValue]);
-        }        
+        }
       }
     } else {
       //Después, se limpia lastLetter
@@ -92,50 +98,42 @@ function App() {
       }
     });
   };
-//Devuleve length del array de letras incorrectas y ese número es el que aumenta el moñeco
+  //Devuleve length del array de letras incorrectas y ese número es el que aumenta el moñeco
   const renderMoñeco = () => {
-    return incorrectLetters.length
+    return incorrectLetters.length;
   };
 
   return (
     <div>
       <div className="page">
-        <Header/>
+        <Header />
         <main className="main">
+          <Loading isLoading={isLoading} />
           <Switch>
-          <Route path="/instructions">
-          <Instructions/>
-          </Route>
-          <Route path="/options">
-          <Options/>
-          </Route>
-          <Route exact path="/">
-          <section>
-           <SolutionLetters letters={renderSolutionLetters()} />
-            <ErrorLetters letters={renderErrorLetters()}/>
-            <form className="form" onSubmit={handleSubmit}>
-              <label className="title" htmlFor="last-letter">
-                Escribe una letra:
-              </label>
-              <input
-                autoComplete="off"
-                className="form__input"
-                maxLength="1"
-                type="text"
-                name="last-letter"
-                id="last-letter"
-                value={lastLetter}
-                onChange={handleInputChange}
-              />
-            </form>
-          </section>
-          {/*si el número (length) del array es igual o mayor a 13, devuelve mensaje o nada*/}
-          <h1>{renderMoñeco() >= 13 ? 'Has perdido' : ''}</h1>
-          </Route>
+            <Route path="/instructions">
+              <Instructions />
+            </Route>
+            <Route path="/options">
+              <Options />
+            </Route>
+            <Route exact path="/">
+              <section>
+                <SolutionLetters letters={renderSolutionLetters()} />
+                <ErrorLetters letters={renderErrorLetters()} />
+                {/*Las funciones de handle del input no llevan paréntesis porque no devuelven nada, solo controlan*/}
+                <Form
+                  handleSubmit={handleSubmit}
+                  lastLetter={lastLetter}
+                  handleInputChange={handleInputChange}
+                />
+              </section>
+              {/*si el número (length) del array es igual o mayor a 13, devuelve mensaje o nada*/}
+              <h1>{renderMoñeco() >= 13 ? "Has perdido" : ""}</h1>
+            </Route>
           </Switch>
-          <Muñeco numberOfErrors={renderMoñeco()}/>
+          <Muñeco numberOfErrors={renderMoñeco()} />
         </main>
-        <Footer/>
+        <Footer />
       </div>
     </div>
   );
